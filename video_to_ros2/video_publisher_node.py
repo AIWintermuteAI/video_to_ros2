@@ -68,6 +68,15 @@ class VideoPublisher(Node):
             next_frame = time.time() + video_frame_time
 
             ret, frame = capture.read()
+            if not ret:
+                if self.loop:
+                    self.get_logger().info("Video finished, rewinding...")
+                    capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
+                    continue
+                else:
+                    self.get_logger().info("Video finished.")
+                    break
+
             self.publish_frames(frame)
 
             curr_time = time.time()
@@ -77,15 +86,6 @@ class VideoPublisher(Node):
                 wait_time = next_frame - curr_time
                 # self.get_logger().info(f"Loading took less time than expected. Waiting {wait_time} ms")
                 time.sleep(1.0/wait_time)
-
-            if not ret:
-                if self.loop:
-                    self.get_logger().info("Video finished, rewinding...")
-                    capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
-                    continue
-                else:
-                    break
-                    self.get_logger().info("Video finished.")
 
         capture.release()
 
