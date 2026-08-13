@@ -16,6 +16,10 @@ Parameters:
 - loop - Rewind and replay video when it reaches the end (bool)
   - default: True
 
+```
+ros2 run video_to_ros2 video_publisher --ros-args --param loop:=true --param video_file:=videos/short_video.mp4
+```
+
 ## video_preview
 Lets you preview video form a camera feed in ROS2.
 Parameters:
